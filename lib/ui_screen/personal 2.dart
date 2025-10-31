@@ -5,8 +5,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:fluttertoast/fluttertoast.dart' as ft;
-import 'features/personal_adding/personnel_adding_provider.dart';
-import 'features/personal_adding/roles_model_class.dart';
+import '../features/personal_adding/personnel_adding_provider.dart';
+import '../features/personal_adding/roles_model_class.dart';
 
 class PersonnelDetailsForm extends StatefulWidget {
   final String token;
@@ -17,7 +17,7 @@ class PersonnelDetailsForm extends StatefulWidget {
 }
 
 class _PersonnelDetailsFormState extends State<PersonnelDetailsForm> {
-  bool isActive = true;
+  bool isActive = false;
   bool isLoading = true;
 
   final TextEditingController fullNameController = TextEditingController();
@@ -196,11 +196,11 @@ class _PersonnelDetailsFormState extends State<PersonnelDetailsForm> {
                         ),
                         child: Column(
                           children: [
-                            if (isLoading)
-                              const Center(
-                                  child: CircularProgressIndicator(
-                                      color: Color(0xffffcc00)))
-                            else if (roles.isEmpty)
+                            // if (isLoading)
+                            //   const Center(
+                            //       child: CircularProgressIndicator(
+                            //           color: Color(0xffffcc00)))
+                            if (roles.isEmpty)
                               const Text("No roles found")
                             else
                               ...roles.map((role) {
@@ -348,21 +348,28 @@ class _PersonnelDetailsFormState extends State<PersonnelDetailsForm> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                padding: EdgeInsets.symmetric(horizontal: width * 0.03),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: width * 0.05,
-                      child: Icon(Icons.grid_view_rounded,
-                          color: Colors.black, size: width * 0.05),
+                    IconButton(
+
+                      icon: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: width * 0.05,
+                        child: Icon(Icons.grid_view_rounded,
+                            color: Colors.black, size: width * 0.05),
+                      ), onPressed: () {  },
                     ),
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: width * 0.05,
-                      child: Icon(Icons.person_outline,
-                          color: Colors.black, size: width * 0.05),
+                    IconButton(
+
+                      icon: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: width * 0.05,
+                        child: Icon(Icons.person_outline,
+                            color: Colors.black, size: width * 0.05),
+
+                      ), onPressed: () {  },
                     ),
                   ],
                 ),
@@ -439,18 +446,12 @@ class _PersonnelDetailsFormState extends State<PersonnelDetailsForm> {
       "status": isActive ? "1" : "0",
     };
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(
-        child: CircularProgressIndicator(color: Color(0xffffcc00)),
-      ),
-    );
+
 
     final provider = context.read<PersonnelAddingProvider>();
     await provider.addPersonnel(token, body);
 
-    Navigator.pop(context); // close progress dialog
+    // Navigator.pop(context); // close progress dialog
 
     if (provider.error == null) {
       showDialog(
@@ -476,10 +477,10 @@ class _PersonnelDetailsFormState extends State<PersonnelDetailsForm> {
         builder: (_) => AlertDialog(
           title: const Text("Error"),
           content:
-          Text(provider.error ?? "Some issue, please enter valid details."),
+          Text("Some issue, please enter valid details."),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () { Navigator.pop(context);},
               child: const Text("OK", style: TextStyle(color: Colors.black)),
             ),
           ],

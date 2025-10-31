@@ -1,11 +1,11 @@
-import 'package:bee_chem/personal%202.dart';
+import 'package:bee_chem/ui_screen/personal%202.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'features/personnel/personal_list_model.dart';
-import 'features/personnel/personnel_provider.dart';
+import '../features/personnel/personal_list_model.dart';
+import '../features/personnel/personnel_provider.dart';
 
 class PersonnelDetailsListScreen extends StatefulWidget {
   final String token;
@@ -47,7 +47,8 @@ class _PersonnelDetailsListScreenState
     final personnelList = provider.filteredList;
     final size = MediaQuery.of(context).size;
     final textScale = size.width / 400;
-
+    final height = size.height;
+    final width = size.width;
     return Scaffold(
       backgroundColor: const Color(0xfff8f8f8),
       floatingActionButton: FloatingActionButton(
@@ -88,20 +89,28 @@ class _PersonnelDetailsListScreenState
                   child: Column(
                     children: [
                       Padding(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.03),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Icon(Icons.grid_view_rounded,
-                                  color: Colors.black),
+                          children: [
+                            IconButton(
+
+                              icon: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: width * 0.05,
+                                child: Icon(Icons.grid_view_rounded,
+                                    color: Colors.black, size: width * 0.05),
+                              ), onPressed: () {  },
                             ),
-                            CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Icon(Icons.person_outline,
-                                  color: Colors.black),
+                            IconButton(
+
+                              icon: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: width * 0.05,
+                                child: Icon(Icons.person_outline,
+                                    color: Colors.black, size: width * 0.05),
+
+                              ), onPressed: () {  },
                             ),
                           ],
                         ),
@@ -184,47 +193,140 @@ class _PersonnelDetailsListScreenState
             const SizedBox(height: 10),
 
             // ERROR HANDLING / EMPTY / LIST
-            if (provider.error != null)
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.wifi_off,
-                            color: Colors.grey, size: 60),
-                        const SizedBox(height: 16),
-                        Text(
-                          "Unable to load data.\nPlease check your connection or try again later.",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            color: Colors.black54,
+            Expanded(
+                child:provider.loading
+                    ? ListView.builder(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.15),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            context
-                                .read<PersonnelProvider>()
-                                .fetchPersonnel(widget.token);
-                          },
-                          icon: const Icon(Icons.refresh),
-                          label: const Text("Retry"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber,
-                            foregroundColor: Colors.black,
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CircleAvatar(
+                                backgroundColor: Color(0xffffeb99),
+                                child: Icon(Icons.groups_rounded,
+                                    color: Colors.black87),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.red.shade50,
+                                            border: Border.all(
+                                              color:Colors.red,
+                                            ),
+                                            borderRadius:
+                                            BorderRadius.circular(20),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 2,
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                Icons.circle,
+                                                color: Colors.red,
+                                                size: 8,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                               "",
+                                                style: TextStyle(
+                                                  color:Colors.red,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.phone,
+                                            size: 16, color: Colors.grey),
+                                        const SizedBox(width: 4),
+                                        Text("",
+                                            style:
+                                            const TextStyle(fontSize: 13)),
+                                        const SizedBox(width: 10),
+                                        const Icon(Icons.person,
+                                            size: 16, color: Colors.grey),
+                                        const SizedBox(width: 4),
+                                        Expanded(
+                                          child: Text(
+                                            "",
+                                            style:
+                                            const TextStyle(fontSize: 13),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            else if (personnelList.isEmpty && ! provider.loading)
-              Expanded(
-                child: Center(
+                          const Divider(),
+                          Row(
+                            children: [
+                              const Icon(Icons.location_on_outlined,
+                                  size: 16, color: Colors.grey),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  "${"person.postcode"} ${"person.address"}, ${"person.suburb"}, ${"person.state"}, ${"person.country"}",
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                )
+                    : (_searchController.text.isNotEmpty && personnelList.isEmpty)
+                    ? Center(
                   child: Text(
                     'No person found.',
                     style: GoogleFonts.poppins(
@@ -233,11 +335,8 @@ class _PersonnelDetailsListScreenState
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-              )
-            else
-              Expanded(
-                child: ListView.builder(
+                )
+                    :ListView.builder(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   itemCount: personnelList.length,

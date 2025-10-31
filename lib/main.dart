@@ -1,4 +1,4 @@
-import 'package:bee_chem/root_screen.dart';
+import 'package:bee_chem/ui_screen/root_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/api_client.dart';
@@ -8,7 +8,7 @@ import 'features/personal_adding/personnel_adding_repository.dart';
 import 'features/personal_adding/personnel_adding_provider.dart';
 import 'features/personnel/personnel_provider.dart';
 import 'features/personnel/personnel_repository.dart';
-import 'login.dart';
+import 'ui_screen/login.dart';
 
 void main() {
   runApp(const MyApp());

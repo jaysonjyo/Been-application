@@ -1,4 +1,4 @@
-import 'package:bee_chem/personal%20list.dart';
+import 'package:bee_chem/ui_screen/personal%20list.dart';
 import 'package:bee_chem/toast.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
@@ -6,12 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'core/storage.dart';
-import 'core/validators.dart';
-import 'features/auth/auth_provider.dart';
+import '../core/storage.dart';
+import '../core/validators.dart';
+import '../features/auth/auth_provider.dart';
 
 class BeeChemLoginPage extends StatefulWidget {
-  const BeeChemLoginPage({super.key});
+  final bool fromSplash;
+  const BeeChemLoginPage({super.key, this.fromSplash = false});
 
   @override
   State<BeeChemLoginPage> createState() => _BeeChemLoginPageState();
@@ -29,18 +30,25 @@ class _BeeChemLoginPageState extends State<BeeChemLoginPage> {
   void initState() {
     super.initState();
     // Simulate loading delay
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => isLoading = false);
-    });
-    Future.delayed(const Duration(seconds: 2), () async {
-      final prefs = await SharedPreferences.getInstance();
-      final savedEmail = prefs.getString('saved_email');
-      if (savedEmail != null) {
-        emailController.text = savedEmail;
-        rememberMe = true;
-      }
-      setState(() => isLoading = false);
-    });
+    if (widget.fromSplash) {
+      // ⏩ Skip skeleton shimmer since splash already showed
+      _loadRememberedEmail();
+    } else {
+      // Keep shimmer for cold app start
+      Future.delayed(const Duration(seconds: 2), () {
+        _loadRememberedEmail();
+      });
+    }
+  }
+
+  Future<void> _loadRememberedEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedEmail = prefs.getString('saved_email');
+    if (savedEmail != null) {
+      emailController.text = savedEmail;
+      rememberMe = true;
+    }
+    setState(() => isLoading = false);
   }
 
   @override
@@ -258,6 +266,7 @@ class _BeeChemLoginPageState extends State<BeeChemLoginPage> {
 
                               showToast("Login Successful", success: true);
 
+                              if (!mounted) return;
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(builder: (_) => PersonnelDetailsListScreen(token: token)),
                               );
